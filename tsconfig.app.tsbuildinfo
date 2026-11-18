@@ -1,1 +1,0 @@
-{"root":["./src/app.test.tsx","./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/atlasmap.tsx","./src/components/infopanel.tsx","./src/components/resourceicon.tsx","./src/data/mapdata.ts","./src/data/resourcedata.ts","./src/test/setup.ts"],"version":"5.9.3"}
