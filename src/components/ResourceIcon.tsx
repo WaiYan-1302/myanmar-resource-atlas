@@ -10,6 +10,10 @@ export function ResourceIcon({ type, size = 28, decorative = true }: Props) {
       return <svg {...common}><path d="M17 3c2 7-5 8-2 14 2-2 4-3 5-6 4 4 6 8 4 13-2 5-9 7-14 4-5-3-5-10-1-14 2-2 4-4 5-8 2 2 2 5 3 7Z" fill="currentColor"/><path d="M17 28c-4-1-5-5-3-8 1 2 2 3 4 4 1-2 2-4 1-6 4 3 4 9-2 10Z" fill="#fff4d8" opacity=".8"/></svg>
     case 'jade':
       return <svg {...common}><path d="m16 3 10 7-4 15-13 3-5-13L9 5l7-2Z" fill="currentColor"/><path d="m9 6 6 8-6 13m7-24-1 11 7 11m-7-11 11-4M4 15l11-1" stroke="#fff4d8" strokeWidth="1.4" opacity=".7"/></svg>
+    case 'gems':
+      return <svg {...common}><path d="m16 3 11 9-5 15H10L5 12l11-9Z" fill="currentColor"/><path d="m5 12 8 2 3-11 3 11 8-2M13 14l3 13 3-13M10 27l3-13-8-2m17 15-3-13 8-2" stroke="#fff4d8" strokeWidth="1.35" opacity=".8"/></svg>
+    case 'gold':
+      return <svg {...common}><path d="m7 9 6-5h8l5 6-3 16H8L5 15l2-6Z" fill="currentColor"/><path d="M8 10h16m-17 5h18M11 4l3 6 2-6 3 6 2-6M8 26l5-11 3 11 4-11 3 11" stroke="#fff4d8" strokeWidth="1.3" opacity=".72"/></svg>
     case 'rareEarths':
       return <svg {...common}><path d="M16 2 20 11l10 5-10 5-4 9-4-9-10-5 10-5 4-9Z" fill="currentColor"/><circle cx="16" cy="16" r="4" fill="#fff4d8"/><circle cx="16" cy="16" r="1.7" fill="currentColor"/></svg>
     case 'tin':

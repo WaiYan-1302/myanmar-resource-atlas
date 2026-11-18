@@ -1,200 +1,129 @@
-export type LayerId = 'gas' | 'jade' | 'rareEarths' | 'tin' | 'copper' | 'forests' | 'farmland' | 'rivers'
+export type LayerId = 'gas' | 'jade' | 'gems' | 'gold' | 'rareEarths' | 'tin' | 'copper' | 'forests' | 'farmland' | 'rivers'
 export type PerspectiveId = 'exports' | 'jobs' | 'dailyLife'
 export type Confidence = 'High' | 'Medium' | 'Broad area'
+export type EvidenceType = 'reported' | 'estimated' | 'analytical' | 'historical'
 
-export type Source = {
-  id: string
-  title: string
-  organization: string
-  url: string
-  date: string
-  note?: string
+export type Source = { id: string; title: string; organization: string; url: string; date: string; note: string }
+export type Claim = {
+  id: string; resource: LayerId | 'atlas'; location: string; claim: string; value: string; unit: string
+  period: string; sourceId: string; pageTable: string; evidenceType: EvidenceType; limitation: string
 }
-
+export type CardSection = {
+  label: 'Where it is found' | 'Extraction & use' | 'Why it matters' | 'Limits of the evidence'
+  text: string; claimIds: string[]
+}
 export type ResourceMarker = {
-  id: string
-  name: string
-  shortName: string
-  layer: Exclude<LayerId, 'rivers'>
-  longitude: number
-  latitude: number
-  location: string
-  significance: string
-  dataYear: string
-  uncertainty: string
-  confidence: Confidence
-  sourceId: string
-  caution?: string
+  id: string; name: string; shortName: string; layer: LayerId; longitude: number; latitude: number
+  location: string; dataYear: string; uncertainty: string; confidence: Confidence
+  sections: CardSection[]; caution?: string
 }
 
 export const sources: Source[] = [
-  {
-    id: 'usgs-2024',
-    title: 'Burma: 2024 Minerals Yearbook data release',
-    organization: 'U.S. Geological Survey',
-    url: 'https://www.usgs.gov/centers/national-minerals-information-center/burma',
-    date: '2024 data; published 2026',
-    note: 'Mine-output estimates and broad production areas; some values are estimated.',
-  },
-  {
-    id: 'eiti-2018',
-    title: 'Myanmar EITI Reconciliation Report 2017–2018',
-    organization: 'Extractive Industries Transparency Initiative',
-    url: 'https://eiti.org/sites/default/files/attachments/meiti_reconciliation_report_2017-2018_final_signed_31st_march_2020.pdf',
-    date: 'FY 2017–2018; published 2020',
-    note: 'Historical disclosure. It does not describe present territorial control or current operations.',
-  },
-  {
-    id: 'worldbank-2025',
-    title: 'Myanmar Economic Monitor: Surviving, Not Thriving',
-    organization: 'World Bank',
-    url: 'https://documents1.worldbank.org/curated/en/099120625204042781/pdf/P507203-7c4662b6-c1d8-4c3c-9b0c-d4835f2763cb.pdf',
-    date: 'December 2025',
-    note: 'Agriculture accounted for more than one-third of total employment in 2024.',
-  },
-  {
-    id: 'wits-2025',
-    title: 'Myanmar natural gas exports by country, 2025',
-    organization: 'World Integrated Trade Solution / UN Comtrade',
-    url: 'https://wits.worldbank.org/trade/comtrade/en/country/MMR/year/2025/tradeflow/Exports/partner/ALL/product/271121',
-    date: '2025 trade data',
-    note: 'US$3.059 billion is gross export value, not government or public revenue.',
-  },
-  {
-    id: 'fao-fra',
-    title: 'Global Forest Resources Assessment 2020: Myanmar country report',
-    organization: 'Food and Agriculture Organization of the United Nations',
-    url: 'https://www.fao.org/forest-resources-assessment/past-assessments/fra-2020/country-reports/en',
-    date: '2020 assessment',
-    note: 'National forest reporting; the map overlay here is illustrative, not a forest inventory.',
-  },
-  {
-    id: 'natural-earth',
-    title: 'Natural Earth vector map data',
-    organization: 'Natural Earth',
-    url: 'https://www.naturalearthdata.com/about/terms-of-use/',
-    date: 'Version 5.x; accessed November 2026',
-    note: 'Public-domain 1:50m country and 1:10m administrative and river data.',
-  },
+  { id:'usgs-2024', title:'The Mineral Industry of Burma in 2024', organization:'U.S. Geological Survey', url:'https://www.usgs.gov/centers/national-minerals-information-center/burma', date:'2024 data; advance release 2026', note:'National mine-output estimates and broad production context; several quantities are explicitly estimated.' },
+  { id:'eiti-2018', title:'Myanmar EITI Reconciliation Report 2017–2018', organization:'Extractive Industries Transparency Initiative', url:'https://eiti.org/sites/default/files/attachments/meiti_reconciliation_report_2017-2018_final_signed_31st_march_2020.pdf', date:'FY 2017–2018; published 2020', note:'Historical disclosure only. Locations and shares do not describe current operations or territorial control.' },
+  { id:'eiti-country', title:'Myanmar country page', organization:'Extractive Industries Transparency Initiative', url:'https://eiti.org/countries/myanmar', date:'Status updated 29 February 2024', note:'Myanmar was delisted in 2024; its last detailed EITI report covers FY 2017–2018.' },
+  { id:'wits-2025', title:'Myanmar natural gas exports by country, 2025', organization:'World Integrated Trade Solution / UN Comtrade', url:'https://wits.worldbank.org/trade/comtrade/en/country/MMR/year/2025/tradeflow/Exports/partner/ALL/product/271121', date:'2025 trade data', note:'Gross customs export value—not public revenue, profit, or value retained in Myanmar.' },
+  { id:'worldbank-2025', title:'Myanmar Economic Monitor: Surviving, Not Thriving', organization:'World Bank', url:'https://documents1.worldbank.org/curated/en/099120625204042781/pdf/P507203-7c4662b6-c1d8-4c3c-9b0c-d4835f2763cb.pdf', date:'December 2025', note:'Recent comparable national measures for agriculture’s employment, output, and export footprint.' },
+  { id:'worldbank-aez-2024', title:'Myanmar Food Security and Nutrition Project', organization:'World Bank', url:'https://documents1.worldbank.org/curated/en/099082624043085874/pdf/P5014751c07ffe045180f21334822f648e8.pdf', date:'2024', note:'Defines broad agroecological zones; not a parcel-level crop map.' },
+  { id:'worldbank-environment-2019', title:'Myanmar Country Environmental Analysis', organization:'World Bank', url:'https://www.worldbank.org/en/country/myanmar/publication/myanmar-country-environmental-analysis', date:'2019', note:'National environmental analysis based largely on pre-2019 evidence.' },
+  { id:'worldbank-water-2020', title:'National Food and Agriculture Systems Project: Environmental and Social Management Framework', organization:'World Bank', url:'https://documents1.worldbank.org/curated/en/803751591851400917/pdf/Environmental-and-Social-Management-Framework.pdf', date:'2020', note:'Major-river and basin context; not a current hydrological forecast.' },
+  { id:'gia-ruby-2019', title:'Ruby: Geographic Origin Determination', organization:'Gemological Institute of America', url:'https://www.gia.edu/gems-gemology/winter-2019-ruby-geographic-origin-determination', date:'Winter 2019', note:'Origin characteristics for Mogok and Mong Hsu; not a production census.' },
+  { id:'gia-sapphire-2021', title:'Blue Sapphires from Mogok, Myanmar: A Gemological Review', organization:'Gemological Institute of America', url:'https://www.gia.edu/gems-gemology/winter-2021-blue-sapphires-from-mogok-myanmar-gemological-review', date:'Winter 2021', note:'Characterizes a Mogok sample; does not imply uniform quality.' },
+  { id:'eiti-asm', title:'Coverage of artisanal and small-scale mining in EITI reporting', organization:'Extractive Industries Transparency Initiative', url:'https://eiti.org/guidance-notes/coverage-artisanal-and-small-scale-mining-asm-eiti-reporting', date:'Guidance accessed 2026', note:'Explains why informal mining is often poorly captured in official data.' },
+  { id:'natural-earth', title:'Natural Earth vector map data', organization:'Natural Earth', url:'https://www.naturalearthdata.com/about/terms-of-use/', date:'Version 5.x; accessed November 2026', note:'Public-domain geometry generalized for atlas-scale use.' },
 ]
 
-export const layerMeta: Record<LayerId, { label: string; color: string; description: string }> = {
-  gas: { label: 'Natural gas', color: '#2f7794', description: 'Offshore project context and export trade' },
-  jade: { label: 'Jade', color: '#2f8060', description: 'Historical jade-producing areas' },
-  rareEarths: { label: 'Rare earths', color: '#9d58a3', description: 'Broad extraction area, not mine coordinates' },
-  tin: { label: 'Tin', color: '#b36b44', description: 'Man Maw district context' },
-  copper: { label: 'Copper', color: '#c45537', description: 'Monywa and Letpadaung context' },
-  forests: { label: 'Forests', color: '#487a47', description: 'Illustrative forest landscapes' },
-  farmland: { label: 'Farmland', color: '#c59b3e', description: 'Illustrative farming heartlands' },
-  rivers: { label: 'Rivers', color: '#4d91ad', description: 'Natural Earth major river centerlines' },
+const c = (
+  id:string, resource:Claim['resource'], location:string, claim:string, period:string, sourceId:string,
+  pageTable:string, evidenceType:EvidenceType, limitation:string, value = 'Not applicable', unit = 'Not applicable',
+): Claim => ({ id, resource, location, claim, period, sourceId, pageTable, evidenceType, limitation, value, unit })
+
+export const claims: Claim[] = [
+  c('gas-export-value','gas','Myanmar','Myanmar reported US$3.059 billion in gross exports of gaseous natural gas in 2025.','2025','wits-2025','Product 271121, World total row','reported','Customs value is not government revenue, company profit, or household income.','3.059','US$ billion, gross export value'),
+  c('gas-destinations','gas','China and Thailand','Reported 2025 gas export value was almost evenly divided between China and Thailand.','2025','wits-2025','Partner rows: China and Thailand','reported','Partner attribution does not measure who ultimately benefited.','US$1.531B China; US$1.529B Thailand','gross export value'),
+  c('shwe-location','gas','Offshore Rakhine','The historical EITI report places Shwe in offshore blocks A-1 and A-3 near Kyaukpyu.','FY 2017–2018 report','eiti-2018','Oil and gas overview / project map, pp. 54–56','historical','Cannot establish current operation, ownership, access, or control.'),
+  c('jade-location-share','jade','Kachin and Sagaing','Officially recorded jade production was 98.3% in Kachin and 1.7% in Sagaing.','FY 2017–2018','eiti-2018','Table 70, p. 91','reported','Historical official output may omit undeclared extraction.','98.3% Kachin; 1.7% Sagaing','officially recorded production share'),
+  c('jade-areas','jade','Hpakant, Mohnyin and Hkamti','The report identifies Hpakant and Mohnyin in Kachin and Hkamti in Sagaing as jade-producing areas.','FY 2017–2018','eiti-2018','Gemstone overview / Table 70, pp. 90–91','historical','Area labels do not mark individual pits or current control.'),
+  c('jade-output-estimate','jade','Myanmar','USGS estimated 2024 jade mine production at 1,000,000 kilograms.','2024','usgs-2024','Table 1, jade row','estimated','Informal and illicit production remains difficult to observe.','1,000,000','kilograms, estimated mine output'),
+  c('gems-location-share','gems','Mandalay, Shan and Kachin','Officially recorded colored-gem production was 87.7% in Mandalay, 12.2% in Shan and 0.1% in Kachin.','FY 2017–2018','eiti-2018','Table 69, p. 90','reported','Historical share is not a current value or quality measure.','87.7% / 12.2% / 0.1%','officially recorded production share'),
+  c('mogok-gems','gems','Mogok','GIA identifies Mogok as a source of marble-hosted ruby and documents sapphires from the same gem tract.','Reviews published 2019 and 2021','gia-ruby-2019','Myanmar / Mogok discussion','analytical','Gemological samples do not measure annual output or imply uniform quality.'),
+  c('mong-hsu-ruby','gems','Mong Hsu','GIA identifies Mong Hsu as another Myanmar source of marble-hosted ruby.','Review published 2019','gia-ruby-2019','Myanmar / Mong Hsu discussion','analytical','Origin research is not current mine-status or production data.'),
+  c('gold-output-estimate','gold','Myanmar','USGS estimated 2024 gold mine output at 500 kilograms.','2024','usgs-2024','Table 1, gold row','estimated','Informal, artisanal, illicit, and conflict-affected production is difficult to capture.','500','kilograms, estimated mine output'),
+  c('gold-yamethin','gold','Yamethin Township','The historical EITI report lists the Modi Momi gold project in Yamethin Township.','FY 2017–2018 report','eiti-2018','Table 71, p. 92','historical','Not evidence of current production, ownership, or control.'),
+  c('gold-asm-limit','gold','Myanmar','EITI guidance notes that informal artisanal mining makes production, employment, and revenue difficult to capture.','General reporting guidance','eiti-asm','Sections 1–2','analytical','A data-quality warning, not a Myanmar production estimate.'),
+  c('ree-global-share','rareEarths','Myanmar','USGS estimated Myanmar produced 7.1% of world rare-earth mine output, ranking fourth.','2024','usgs-2024','Country summary / rare-earth section','estimated','Global share may be revised as reporting improves.','7.1','percent of world mine output'),
+  c('ree-kachin','rareEarths','Kachin State','USGS reports 2024 rare-earth extraction was concentrated in Kachin State.','2024','usgs-2024','Rare earths section','reported','Supports only a broad area, not mine coordinates or control.'),
+  c('ree-exports-china','rareEarths','Myanmar to China','USGS reports exports to China equivalent to about 27,000 tonnes of rare-earth oxides.','2024','usgs-2024','Rare earths section','reported','Trade-equivalent tonnage is not mine output, export value, or public revenue.','27,000','metric tonnes, REO equivalent'),
+  c('tin-global-share','tin','Myanmar','USGS estimated Myanmar at 6.8% of world tin mine output, ranking sixth.','2024','usgs-2024','Country summary / tin section','estimated','Mine-output share is not an export share or revenue ranking.','6.8','percent of world mine output'),
+  c('tin-output','tin','Myanmar','USGS estimated tin mine output at 20,000 tonnes, 42% below 2023.','2024','usgs-2024','Table 1 / tin section','estimated','USGS notes disruption and a resource audit at Man Maw.','20,000','metric tonnes, estimated mine output'),
+  c('tin-man-maw','tin','Man Maw, eastern Shan','USGS describes Man Maw as Myanmar’s dominant tin mine and says production remained suspended at end-2024 during a resource audit.','End-2024','usgs-2024','Tin section','reported','District context cannot capture later status changes or individual workings.'),
+  c('tin-heinda','tin','Heinda, near Dawei','The historical EITI report locates Heinda about 25 kilometres northeast of Dawei.','FY 2017–2018 report','eiti-2018','Table 71, p. 92','historical','Location is not confirmation of current operation.','about 25','kilometres northeast of Dawei'),
+  c('copper-output','copper','Myanmar','USGS estimated 2024 copper mine output at 10,000 tonnes.','2024','usgs-2024','Table 1, copper row','estimated','A national estimate does not establish activity at a specific project.','10,000','metric tonnes, estimated mine output'),
+  c('copper-monywa','copper','Salingyi Township','The historical EITI report describes four Monywa deposits, including Letpadaung and the linked S&K operation.','FY 2017–2018 report','eiti-2018','Table 71, p. 92','historical','Cannot establish current production, ownership, access, or control.'),
+  c('forest-loss','forests','Myanmar','The World Bank reported forest cover declined 1.2% per year from 1990 to 2015, about 10 million hectares in total.','1990–2015','worldbank-environment-2019','Forests section / overview','analytical','Historical national trend, not current cover or local loss.','1.2% yearly; ~10 million ha','historical forest-cover change'),
+  c('forest-drivers','forests','Myanmar','The World Bank links forest pressure to conversion for agriculture and mining, infrastructure, and weak governance.','Analysis published 2019','worldbank-environment-2019','Forests / governance sections','analytical','Drivers differ by place; the map wash is not causal evidence.'),
+  c('agri-employment','farmland','Myanmar','Agriculture accounted for more than one-third of total employment.','2024','worldbank-2025','Special Focus p. 45; Figure S.1','analytical','National sector share is not a local job count.','more than one-third','share of total employment'),
+  c('agri-gva','farmland','Myanmar','Agriculture contributed approximately one-quarter of gross value added.','Latest cited in Dec. 2025 report','worldbank-2025','Special Focus p. 45; Figure S.1','analytical','Not directly comparable with a commodity’s gross export value.','approximately one-quarter','share of gross value added'),
+  c('agri-export-share','farmland','Myanmar','Agricultural products accounted for about 18% of total export receipts.','Latest cited in Dec. 2025 report','worldbank-2025','Special Focus p. 45; Figure S.2','analytical','Do not rank against a product dollar value without a common denominator and year.','about 18','percent of export receipts'),
+  c('agro-zones','farmland','Myanmar','A World Bank framework groups Myanmar into Delta, Dry, Coastal, and Hilly agroecological zones.','2024 framework','worldbank-aez-2024','p. 37 and Annex p. 66','analytical','Generalized zones are not crop parcels or land-tenure boundaries.'),
+  c('river-livelihoods','rivers','Ayeyarwady system','The framework describes farmers, fishers, and communities depending on the Ayeyarwady, with the Chindwin as its main tributary.','2020 framework','worldbank-water-2020','Section 4.1.3, p. 75','analytical','Does not quantify current users, flows, or local conditions.'),
+  c('river-basins','rivers','Myanmar','The basin table covers about 737,800 km² and lists the Chindwin, upper/lower Ayeyarwady, Sittaung, Thanlwin and other basins.','2020 framework','worldbank-water-2020','Table 4, p. 75','reported','Planning context, not live discharge, water-quality, or flood data.','737,800','square kilometres of catchment'),
+  c('thanlwin-transboundary','rivers','Thanlwin / Salween','The framework identifies the Thanlwin as shared by China, Thailand, and Myanmar.','2020 framework','worldbank-water-2020','International waterways, pp. 15 and 48','reported','Centerline does not represent governance, seasonal flows, or impacts.'),
+  c('eiti-status','atlas','Myanmar','Myanmar was delisted from EITI on 29 February 2024; its last detailed report covers FY 2017–2018.','2024','eiti-country','Country status / Board decision','reported','Historical disclosures remain useful for location context only.','29 February 2024','delisting date'),
+  c('map-license','atlas','Myanmar','Country, first-order administrative, and river geometry uses public-domain Natural Earth data.','Version 5.x','natural-earth','Terms of use','reported','Generalized geometry is for orientation, not control or hydrologic precision.'),
+]
+
+export const claimById = Object.fromEntries(claims.map(x => [x.id, x])) as Record<string, Claim>
+export const sourceById = Object.fromEntries(sources.map(x => [x.id, x])) as Record<string, Source>
+
+export const layerMeta: Record<LayerId,{label:string;color:string;description:string}> = {
+  gas:{label:'Natural gas',color:'#2f7794',description:'Offshore projects and 2025 trade'},
+  jade:{label:'Jade',color:'#2f8060',description:'Historical areas and estimated output'},
+  gems:{label:'Ruby & sapphire',color:'#b23f67',description:'Mogok and Mong Hsu gem tracts'},
+  gold:{label:'Gold',color:'#bb8a25',description:'Sparse official data and ASM limits'},
+  rareEarths:{label:'Rare earths',color:'#9d58a3',description:'Broad Kachin extraction area'},
+  tin:{label:'Tin',color:'#b36b44',description:'Man Maw and historical Heinda'},
+  copper:{label:'Copper',color:'#c45537',description:'Monywa district and national estimate'},
+  forests:{label:'Forests',color:'#487a47',description:'Ecosystems under long-term pressure'},
+  farmland:{label:'Farmland',color:'#c59b3e',description:'Agroecological zones and livelihoods'},
+  rivers:{label:'Rivers',color:'#4d91ad',description:'Major systems and basin context'},
 }
 
-export const perspectives: Record<PerspectiveId, { label: string; kicker: string; title: string; body: string; stat: string; sourceId: string; emphasis: LayerId[] }> = {
-  exports: {
-    label: 'Exports',
-    kicker: 'Perspective 01',
-    title: 'Resources cross borders, but export value is not public revenue.',
-    body: 'WITS records about US$3.06 billion in Myanmar gas exports in 2025. That is gross trade value. It should not be read as tax receipts, state income, or money available for public services.',
-    stat: 'US$3.06B gross gas exports · 2025',
-    sourceId: 'wits-2025',
-    emphasis: ['gas', 'jade', 'rareEarths', 'tin', 'copper'],
-  },
-  jobs: {
-    label: 'Jobs',
-    kicker: 'Perspective 02',
-    title: 'The widest livelihood footprint is in fields, farms, and food systems.',
-    body: 'The World Bank estimates agriculture accounted for more than one-third of total employment in 2024. Extractive projects can shape local work, but comparable current employment data are uneven.',
-    stat: '>⅓ of employment in agriculture · 2024',
-    sourceId: 'worldbank-2025',
-    emphasis: ['farmland', 'forests', 'rivers'],
-  },
-  dailyLife: {
-    label: 'Daily life',
-    kicker: 'Perspective 03',
-    title: 'Water, land, and forests connect resource decisions to daily life.',
-    body: 'Rivers support farms, transport, fisheries, and settlements. Forests hold ecological and livelihood value. Extraction can also bring displacement, pollution, unsafe work, and conflict—impacts this atlas treats as costs, never rewards.',
-    stat: 'Look for connections, not a single score',
-    sourceId: 'worldbank-2025',
-    emphasis: ['rivers', 'farmland', 'forests', 'copper', 'jade', 'rareEarths'],
-  },
+export const perspectives: Record<PerspectiveId,{label:string;kicker:string;title:string;body:string;stat:string;claimId:string;emphasis:LayerId[]}> = {
+  exports:{label:'Exports',kicker:'Perspective 01',title:'Compare trade with trade—not public revenue.',body:'The clearest current commodity measure here is gross customs export value. WITS records US$3.059 billion in gaseous natural-gas exports for 2025. Other layers are not ranked because equally current, comparable export-value data were not verified.',stat:'US$3.059B gross gas exports · 2025',claimId:'gas-export-value',emphasis:['gas']},
+  jobs:{label:'Jobs',kicker:'Perspective 02',title:'Use one employment measure, and show where it is missing.',body:'The World Bank reports that agriculture accounted for more than one-third of total employment in 2024. Comparable current employment shares were not found for the extractive layers, so the atlas does not turn project anecdotes into a jobs ranking.',stat:'>⅓ of total employment in agriculture · 2024',claimId:'agri-employment',emphasis:['farmland']},
+  dailyLife:{label:'Daily life',kicker:'Perspective 03',title:'Trace connections instead of forcing a single score.',body:'Water, farms, and forests support food and livelihoods, while extraction can bring unsafe work, pollution, displacement, and conflict. These relationships use different evidence and are shown as connections—not as a winner, score, or reward.',stat:'No cross-resource ranking: measures are not comparable',claimId:'river-livelihoods',emphasis:['rivers','farmland','forests']},
 }
+
+const s = (label:CardSection['label'], text:string, ...claimIds:string[]):CardSection => ({label,text,claimIds})
+const marker = (x:Omit<ResourceMarker,'sections'>, sections:CardSection[]):ResourceMarker => ({...x,sections})
 
 export const resourceMarkers: ResourceMarker[] = [
-  {
-    id: 'shwe-gas', name: 'Shwe offshore gas project', shortName: 'Shwe', layer: 'gas', longitude: 92.75, latitude: 20.25,
-    location: 'Offshore from Rakhine State, Bay of Bengal',
-    significance: 'The historical EITI report identifies the A-1 and A-3 offshore blocks near Kyaukpyu. Gas is part of a national export trade that WITS values at about US$3.06B gross in 2025.',
-    dataYear: 'Location: FY 2017–18 report · Trade context: 2025',
-    uncertainty: 'The marker is an intentionally approximate offshore label anchor, not a wellhead or platform coordinate.',
-    confidence: 'Broad area', sourceId: 'eiti-2018',
-  },
-  {
-    id: 'hpakant-jade', name: 'Hpakant jade area', shortName: 'Hpakant', layer: 'jade', longitude: 96.32, latitude: 25.62,
-    location: 'Hpakant area, Kachin State',
-    significance: 'Myanmar EITI’s historical report identifies Hpakant as the predominant jadeite-producing area and records environmental-management work responding to damage from extraction.',
-    dataYear: 'FY 2017–2018 (historical)',
-    uncertainty: 'The marker represents a mining area around Hpakant, not an individual pit. Current activity and control are not inferred.',
-    confidence: 'Medium', sourceId: 'eiti-2018',
-    caution: 'Jade extraction has severe environmental and human consequences. The map does not score or gamify them.',
-  },
-  {
-    id: 'kachin-rare-earths', name: 'Kachin rare-earth areas', shortName: 'Rare earths', layer: 'rareEarths', longitude: 97.95, latitude: 25.45,
-    location: 'Broad area in Kachin State',
-    significance: 'USGS reports that rare-earth extraction in 2024 was concentrated in Kachin State. Myanmar accounted for an estimated 7.1% of global rare-earth mine output that year.',
-    dataYear: '2024 mine output',
-    uncertainty: 'USGS describes a broad state-level concentration. This deliberately offset marker is not a mine coordinate and does not map control.',
-    confidence: 'Broad area', sourceId: 'usgs-2024',
-    caution: 'Reporting links extraction with conflict and serious environmental harm; those impacts are integral to interpreting the resource.',
-  },
-  {
-    id: 'man-maw-tin', name: 'Man Maw tin district', shortName: 'Man Maw', layer: 'tin', longitude: 98.95, latitude: 22.55,
-    location: 'Eastern Shan State / Wa Self-Administered Region',
-    significance: 'USGS describes Man Maw as the country’s dominant tin mine and reports Myanmar at an estimated 6.8% of global tin mine output in 2024.',
-    dataYear: '2024 mine output',
-    uncertainty: 'The marker locates the district broadly. USGS reported production suspended for a resource audit at the end of 2024.',
-    confidence: 'Broad area', sourceId: 'usgs-2024',
-  },
-  {
-    id: 'monywa-copper', name: 'Monywa / Letpadaung copper', shortName: 'Monywa', layer: 'copper', longitude: 95.08, latitude: 22.1,
-    location: 'Salingyi Township, Sagaing Region',
-    significance: 'The historical EITI report describes four copper deposits in the Monywa district, including Letpadaung and the linked S&K operation.',
-    dataYear: 'FY 2017–2018 report (historical)',
-    uncertainty: 'The marker is a district-level anchor. It does not describe current production, ownership, access, or territorial control.',
-    confidence: 'Medium', sourceId: 'eiti-2018',
-    caution: 'Land, pollution, protest, and community impacts belong in any assessment of copper’s significance.',
-  },
-  {
-    id: 'forest-landscapes', name: 'Forest landscapes', shortName: 'Forests', layer: 'forests', longitude: 98.45, latitude: 14.2,
-    location: 'Representative southern landscape; forests occur across Myanmar',
-    significance: 'Forests support biodiversity, climate regulation, and local livelihoods. This layer offers context, not timber-concession or forest-cover claims.',
-    dataYear: 'FAO assessment: 2020',
-    uncertainty: 'The painted overlay is illustrative and intentionally generalized; consult the FAO country report for national inventory data.',
-    confidence: 'Broad area', sourceId: 'fao-fra',
-  },
-  {
-    id: 'farming-heartlands', name: 'Farming heartlands', shortName: 'Farms', layer: 'farmland', longitude: 95.5, latitude: 18.7,
-    location: 'Central plains and lower Ayeyarwady basin',
-    significance: 'Agriculture accounted for more than one-third of total employment in 2024 and anchors food, income, and rural life.',
-    dataYear: 'Employment share: 2024; report: 2025',
-    uncertainty: 'The painted area is an explanatory landscape cue, not a parcel or crop map.',
-    confidence: 'Broad area', sourceId: 'worldbank-2025',
-  },
+  marker({id:'shwe-gas',name:'Shwe offshore gas project',shortName:'Shwe',layer:'gas',longitude:92.75,latitude:20.25,location:'Offshore Rakhine, near Kyaukpyu',dataYear:'Location: FY 2017–18 · Trade: 2025',confidence:'Broad area',uncertainty:'Approximate offshore anchor—not a platform, wellhead, pipeline, or control coordinate.'},[s('Where it is found','Historical reporting places Shwe in offshore blocks A-1 and A-3.','shwe-location'),s('Extraction & use','Offshore gas enters pipeline and cross-border trade systems.','shwe-location','gas-destinations'),s('Why it matters','Gas is the only extractive layer with a verified current gross export-value figure in this release.','gas-export-value'),s('Limits of the evidence','The location is historical while the trade figure is national; it is not Shwe project revenue.','shwe-location','gas-export-value')]),
+  marker({id:'hpakant-jade',name:'Hpakant jade area',shortName:'Hpakant',layer:'jade',longitude:96.32,latitude:25.62,location:'Hpakant area, Kachin State',dataYear:'Share: FY 2017–18 · Estimate: 2024',confidence:'Broad area',uncertainty:'Area anchor—not an individual pit, concession, or current-control claim.',caution:'Fatal landslides, environmental damage, conflict, and unsafe work are consequences—not rewards.'},[s('Where it is found','Hpakant lies within Kachin, which dominated recorded historical jade output.','jade-areas','jade-location-share'),s('Extraction & use','Jadeite is mined and worked as an ornamental gemstone.','jade-output-estimate'),s('Why it matters','USGS continues to list a large—but estimated—national quantity.','jade-output-estimate'),s('Limits of the evidence','Historical shares and a later national estimate do not reveal current site activity.','jade-location-share','jade-output-estimate')]),
+  marker({id:'hkamti-jade',name:'Hkamti jade area',shortName:'Hkamti',layer:'jade',longitude:95.70,latitude:25.98,location:'Hkamti area, Sagaing Region',dataYear:'FY 2017–2018',confidence:'Broad area',uncertainty:'Township-scale orientation only.'},[s('Where it is found','Historical reporting identifies Hkamti as a Sagaing jade area.','jade-areas'),s('Extraction & use','Jadeite is recovered for cutting and ornamental trade.','jade-output-estimate'),s('Why it matters','It shows recorded jade was not wholly confined to Kachin.','jade-location-share'),s('Limits of the evidence','The 1.7% Sagaing share is historical and official-only.','jade-location-share')]),
+  marker({id:'mogok-gems',name:'Mogok ruby & sapphire tract',shortName:'Mogok',layer:'gems',longitude:96.51,latitude:22.92,location:'Mogok, Mandalay Region',dataYear:'Share: FY 2017–18 · Gemology: 2019–21',confidence:'Medium',uncertainty:'Gem-tract anchor—not a mine coordinate or quality claim.'},[s('Where it is found','Mogok is documented as a ruby and sapphire source.','mogok-gems','gems-location-share'),s('Extraction & use','Stones are recovered, sorted, cut, and assessed for the gem trade.','mogok-gems'),s('Why it matters','Mandalay led officially recorded historical colored-gem output.','gems-location-share'),s('Limits of the evidence','Origin samples do not establish current output, market value, or uniform quality.','mogok-gems')]),
+  marker({id:'mong-hsu-gems',name:'Mong Hsu ruby area',shortName:'Mong Hsu',layer:'gems',longitude:98.02,latitude:21.89,location:'Mong Hsu, Shan State',dataYear:'Gemology: 2019 · Share: FY 2017–18',confidence:'Broad area',uncertainty:'Town-area anchor; individual workings are not shown.'},[s('Where it is found','GIA identifies Mong Hsu as a ruby source.','mong-hsu-ruby'),s('Extraction & use','Ruby is recovered and assessed using gemological characteristics.','mong-hsu-ruby'),s('Why it matters','It is distinct from the better-known Mogok tract.','mong-hsu-ruby','gems-location-share'),s('Limits of the evidence','No current volume or project-status figure was verified.','mong-hsu-ruby')]),
+  marker({id:'yamethin-gold',name:'Yamethin gold context',shortName:'Gold',layer:'gold',longitude:96.13,latitude:20.43,location:'Yamethin Township, Mandalay Region',dataYear:'Location: FY 2017–18 · Estimate: 2024',confidence:'Broad area',uncertainty:'Historical township anchor—not an active-mine claim.',caution:'Informality and conflict make gold production, labour, and harm especially difficult to measure.'},[s('Where it is found','Historical EITI reporting lists Modi Momi in Yamethin.','gold-yamethin'),s('Extraction & use','Gold is mined at industrial and artisanal scales and used in jewellery, finance, and industry.','gold-output-estimate','gold-asm-limit'),s('Why it matters','USGS publishes only an estimated national figure.','gold-output-estimate'),s('Limits of the evidence','No defensible current site-level output, export, or jobs figure was verified.','gold-yamethin','gold-asm-limit')]),
+  marker({id:'kachin-rare-earths',name:'Kachin rare-earth areas',shortName:'Rare earths',layer:'rareEarths',longitude:97.95,latitude:25.45,location:'Broad area in Kachin State',dataYear:'2024',confidence:'Broad area',uncertainty:'Deliberately offset state-scale anchor—not a mine or control map.',caution:'Conflict and serious water, soil, and landscape damage are integral to interpreting extraction.'},[s('Where it is found','USGS places the concentration broadly in Kachin.','ree-kachin'),s('Extraction & use','Material is processed and traded for separation and uses such as magnets and electronics.','ree-exports-china'),s('Why it matters','USGS estimated 7.1% of global mine output.','ree-global-share'),s('Limits of the evidence','State-level and global estimates do not support precise site mapping.','ree-global-share','ree-kachin')]),
+  marker({id:'man-maw-tin',name:'Man Maw tin district',shortName:'Man Maw',layer:'tin',longitude:98.95,latitude:22.55,location:'Eastern Shan State / Wa area',dataYear:'2024',confidence:'Broad area',uncertainty:'District anchor; later status changes are not inferred.'},[s('Where it is found','USGS describes Man Maw as the dominant tin mine.','tin-man-maw'),s('Extraction & use','Tin ore is concentrated and smelted for uses including solder and tinplate.','tin-output'),s('Why it matters','Myanmar’s estimated world share was 6.8% despite a national decline.','tin-global-share','tin-output'),s('Limits of the evidence','Production was suspended during a resource audit at end-2024.','tin-man-maw')]),
+  marker({id:'heinda-tin',name:'Heinda tin project context',shortName:'Heinda',layer:'tin',longitude:98.20,latitude:14.10,location:'Near Dawei, Tanintharyi Region',dataYear:'FY 2017–2018',confidence:'Broad area',uncertainty:'Approximate historical anchor, not current-operation confirmation.'},[s('Where it is found','EITI placed Heinda about 25 km northeast of Dawei.','tin-heinda'),s('Extraction & use','Tin-bearing ore is mined and concentrated before metal processing.','tin-heinda'),s('Why it matters','It documents a southern locality distinct from Man Maw.','tin-heinda','tin-man-maw'),s('Limits of the evidence','Current status and output were not verified.','tin-heinda')]),
+  marker({id:'monywa-copper',name:'Monywa / Letpadaung copper',shortName:'Monywa',layer:'copper',longitude:95.08,latitude:22.10,location:'Salingyi Township, Sagaing Region',dataYear:'Location: FY 2017–18 · Estimate: 2024',confidence:'Medium',uncertainty:'District anchor; current ownership, access, output, and control are not shown.',caution:'Land, pollution, protest, displacement, and safety belong in any assessment of copper’s significance.'},[s('Where it is found','Historical EITI reporting describes four Monywa deposits.','copper-monywa'),s('Extraction & use','Copper is used widely in power, construction, and manufacturing.','copper-output'),s('Why it matters','USGS estimated 10,000 tonnes of national mine output.','copper-output'),s('Limits of the evidence','The national estimate cannot be assigned to this historical location.','copper-output','copper-monywa')]),
+  marker({id:'northern-forests',name:'Northern forest landscapes',shortName:'Forests',layer:'forests',longitude:97.25,latitude:26.55,location:'Kachin uplands (representative)',dataYear:'Trend: 1990–2015 · Analysis: 2019',confidence:'Broad area',uncertainty:'Painted cue—not an inventory, concession, or hotspot.'},[s('Where it is found','This northern landscape is representative only.','forest-loss'),s('Extraction & use','Forests provide habitat, products, watershed functions, and livelihood support.','forest-drivers'),s('Why it matters','The national historical decline averaged 1.2% yearly.','forest-loss'),s('Limits of the evidence','A historical national trend cannot describe current local cover.','forest-loss')]),
+  marker({id:'tanintharyi-forests',name:'Tanintharyi forest landscapes',shortName:'South forests',layer:'forests',longitude:98.45,latitude:13.20,location:'Tanintharyi Region (representative)',dataYear:'Analysis published 2019',confidence:'Broad area',uncertainty:'Illustrative anchor; use current local sources for site decisions.'},[s('Where it is found','A representative southern forest landscape.','forest-drivers'),s('Extraction & use','Forests support biodiversity and livelihoods while facing conversion pressure.','forest-drivers'),s('Why it matters','Change connects farming, mining, roads, and governance.','forest-drivers'),s('Limits of the evidence','The texture does not measure canopy, legal status, or recent loss.','forest-loss')]),
+  marker({id:'delta-farmland',name:'Delta farming landscape',shortName:'Delta farms',layer:'farmland',longitude:95.40,latitude:17.45,location:'Ayeyarwady–Yangon–Bago delta zone',dataYear:'Zone: 2024 · Employment: 2024',confidence:'Broad area',uncertainty:'Zone anchor—not a crop, parcel, yield, or tenure map.'},[s('Where it is found','The framework groups Ayeyarwady, Yangon, and Bago in a broad Delta zone.','agro-zones'),s('Extraction & use','Farming produces food and traded crops across varied systems.','agri-employment'),s('Why it matters','Agriculture supported more than one-third of employment.','agri-employment'),s('Limits of the evidence','A national share cannot be assigned to this zone.','agri-employment','agro-zones')]),
+  marker({id:'dry-zone-farmland',name:'Central Dry Zone farming',shortName:'Dry Zone',layer:'farmland',longitude:95.45,latitude:20.75,location:'Sagaing, Magway and Mandalay context',dataYear:'Framework published 2024',confidence:'Broad area',uncertainty:'Generalized zone anchor, not a current crop map.'},[s('Where it is found','The broad zone includes central Sagaing, Magway, Mandalay, and Nay Pyi Taw.','agro-zones'),s('Extraction & use','Farming systems adapt to semi-dry conditions and rainfall constraints.','agro-zones'),s('Why it matters','National jobs and exports make farm stress consequential.','agri-employment','agri-export-share'),s('Limits of the evidence','National shares do not give township outcomes.','agro-zones')]),
+  marker({id:'ayeyarwady-river',name:'Ayeyarwady–Chindwin system',shortName:'Ayeyarwady',layer:'rivers',longitude:95.20,latitude:21.55,location:'Central Myanmar river system',dataYear:'Framework published 2020',confidence:'Broad area',uncertainty:'Label anchor; blue line is a generalized centerline.'},[s('Where it is found','The Ayeyarwady runs north–south; the Chindwin is its main tributary.','river-livelihoods'),s('Extraction & use','The system supports farming, fishing, settlements, transport, and water use.','river-livelihoods'),s('Why it matters','It connects headwaters, the dry zone, and delta.','river-basins','river-livelihoods'),s('Limits of the evidence','No seasonal flow, quality, dam, flood, or access data is shown.','river-basins')]),
+  marker({id:'thanlwin-river',name:'Thanlwin / Salween system',shortName:'Thanlwin',layer:'rivers',longitude:98.15,latitude:18.65,location:'Eastern Myanmar river system',dataYear:'Framework published 2020',confidence:'Broad area',uncertainty:'Generalized centerline—not a basin or live-hydrology layer.'},[s('Where it is found','The Thanlwin crosses eastern Myanmar within a transboundary system.','thanlwin-transboundary'),s('Extraction & use','River water and ecosystems support settlements and livelihoods.','thanlwin-transboundary'),s('Why it matters','Basin decisions connect upstream and downstream communities across borders.','thanlwin-transboundary'),s('Limits of the evidence','No seasonal flows, infrastructure, ecological condition, or allocation is modelled.','thanlwin-transboundary')]),
 ]
 
-export const regionContext: Record<string, { significance: string; sourceId: string; dataYear: string; uncertainty: string }> = {
-  Kachin: { significance: 'This atlas places jade and a broad rare-earth extraction area in Kachin State.', sourceId: 'usgs-2024', dataYear: '2024 minerals context', uncertainty: 'Boundaries are cartographic context; they do not show territorial control.' },
-  Rakhine: { significance: 'Rakhine provides the coastal reference for the offshore Shwe gas project.', sourceId: 'eiti-2018', dataYear: 'FY 2017–2018 (historical)', uncertainty: 'The report is historical and does not establish current operations or control.' },
-  Sagaing: { significance: 'Sagaing contains the Monywa / Letpadaung copper district shown in this release.', sourceId: 'eiti-2018', dataYear: 'FY 2017–2018 (historical)', uncertainty: 'The report is historical and the region boundary is not a mining boundary.' },
-  Shan: { significance: 'Eastern Shan provides the broad context for the Man Maw tin district.', sourceId: 'usgs-2024', dataYear: '2024 minerals context', uncertainty: 'The atlas does not map current control or individual concessions.' },
-  Ayeyarwady: { significance: 'The delta is one of Myanmar’s major farming landscapes and is shaped by the Ayeyarwady river system.', sourceId: 'worldbank-2025', dataYear: '2024 employment context', uncertainty: 'The farmland wash is illustrative, not a land-use inventory.' },
-  Tanintharyi: { significance: 'The long southern peninsula provides context for forest landscapes and coastal livelihoods.', sourceId: 'fao-fra', dataYear: '2020 forest assessment', uncertainty: 'The forest wash is illustrative, not a forest-cover classification.' },
+export const regionContext: Record<string,{text:string;claimIds:string[];dataYear:string;uncertainty:string}> = {
+  Kachin:{text:'Broad context for documented jade and rare-earth areas.',claimIds:['jade-location-share','ree-kachin'],dataYear:'Jade: FY 2017–18 · Rare earths: 2024',uncertainty:'Administrative boundaries do not show extraction boundaries or control.'},
+  Rakhine:{text:'Coastal reference for the historical Shwe offshore location.',claimIds:['shwe-location'],dataYear:'FY 2017–2018',uncertainty:'Historical disclosure does not establish current operation or control.'},
+  Sagaing:{text:'Historical context for Hkamti jade and the Monywa copper district.',claimIds:['jade-areas','copper-monywa'],dataYear:'FY 2017–2018',uncertainty:'The region boundary is not a mine or control boundary.'},
+  Shan:{text:'Broad context for Mong Hsu ruby and the Man Maw tin district.',claimIds:['mong-hsu-ruby','tin-man-maw'],dataYear:'Gemology: 2019 · Tin: 2024',uncertainty:'Markers are not individual workings or control claims.'},
+  Ayeyarwady:{text:'Part of the broad Delta zone and the Ayeyarwady river system.',claimIds:['agro-zones','river-livelihoods'],dataYear:'Frameworks: 2020 and 2024',uncertainty:'Landscape washes are not land-use or flood maps.'},
+  Tanintharyi:{text:'Context for historical Heinda tin and southern forests.',claimIds:['tin-heinda','forest-drivers'],dataYear:'Project: FY 2017–18 · Analysis: 2019',uncertainty:'Neither point nor wash confirms current conditions.'},
 }
-
-export const defaultRegionContext = {
-  significance: 'This administrative area is shown to help readers orient resource locations and river systems.',
-  sourceId: 'natural-earth',
-  dataYear: 'Natural Earth v5.x',
-  uncertainty: 'Boundaries are generalized for atlas-scale use and do not represent territorial control.',
-}
-
-export const mapDataNote = 'Country, state/region, and river geometry comes from Natural Earth public-domain datasets. Resource symbols are approximate explanatory anchors; they are not concession, mine, well, or control maps.'
+export const defaultRegionContext = {text:'Shown for orientation. No additional verified resource claim is attached in this release.',claimIds:['map-license'],dataYear:'Natural Earth v5.x',uncertainty:'Generalized boundaries do not represent territorial control.'}
+export const mapDataNote = 'Country, state/region, and river geometry comes from public-domain Natural Earth datasets. Symbols are approximate explanatory anchors—not concession, mine, well, parcel, hydrology, or territorial-control maps.'

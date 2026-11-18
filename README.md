@@ -1,9 +1,9 @@
 # Myanmar Field Atlas
 
 An interactive, source-led natural-resource atlas built with Vite, React, and
-TypeScript. The first edition includes eight toggleable layers, three reading
-perspectives, keyboard-accessible map features, responsive layouts, and direct
-links to the underlying evidence.
+TypeScript. The researched edition includes ten toggleable layers, three
+reading perspectives, keyboard-accessible map features, responsive layouts,
+and claim-level links to the underlying evidence.
 
 ## Run locally
 
@@ -29,10 +29,15 @@ the same build works at a GitHub Pages project subpath.
 
 ## Edit facts and sources
 
-All resource descriptions, years, uncertainty statements, direct links, layer
-metadata, and perspective text live in one file:
+All sources, structured claims, values and units, periods, page/table
+references, evidence types, limitations, cards, layer metadata, and
+perspective text live in one file:
 
-`src/data/resourceData.ts`
+[`src/data/resourceData.ts`](src/data/resourceData.ts)
+
+See [`DATA_AUDIT.md`](DATA_AUDIT.md) for what was verified, corrected,
+removed, or unavailable. Add facts to the claim registry and reference their
+claim IDs from cards rather than hard-coding them in components.
 
 Detailed EITI locations are labeled historical. The 2025 gas figure is labeled
 gross export value rather than public revenue. USGS global shares are labeled
@@ -56,6 +61,12 @@ npm run extract:map -- "C:\path\to\natural-earth-files"
 
 The workflow at `.github/workflows/deploy-pages.yml` builds and publishes the
 site whenever `main` is pushed.
+
+The canonical deployment is:
+
+<https://waiyan-1302.github.io/myanmar-resource-atlas/>
+
+For a new fork:
 
 1. Create a GitHub repository and push this project to its `main` branch.
 2. On GitHub, open **Settings → Pages**.

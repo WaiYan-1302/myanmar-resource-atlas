@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { AtlasMap } from './components/AtlasMap'
 import { InfoPanel } from './components/InfoPanel'
 import { ResourceIcon } from './components/ResourceIcon'
-import { layerMeta, mapDataNote, perspectives, resourceMarkers, sources, type LayerId, type PerspectiveId } from './data/resourceData'
+import { claimById, layerMeta, mapDataNote, perspectives, resourceMarkers, sourceById, sources, type LayerId, type PerspectiveId } from './data/resourceData'
 
 const allLayers = Object.keys(layerMeta) as LayerId[]
 
@@ -13,7 +13,8 @@ function App() {
   const [selectedRegion, setSelectedRegion] = useState<string>()
   const selectedMarker = useMemo(() => resourceMarkers.find((marker) => marker.id === selectedMarkerId), [selectedMarkerId])
   const perspectiveData = perspectives[perspective]
-  const perspectiveSource = sources.find((source) => source.id === perspectiveData.sourceId)
+  const perspectiveClaim = claimById[perspectiveData.claimId]
+  const perspectiveSource = sourceById[perspectiveClaim.sourceId]
 
   function toggleLayer(layer: LayerId) {
     setEnabledLayers((current) => {
@@ -50,7 +51,7 @@ function App() {
             <h1 id="page-title">A living map of land, water, work & extraction.</h1>
             <p className="hero__lede">Explore how Myanmar’s natural resources connect to exports, jobs, and daily life—without mistaking a symbol for a precise site, or a trade value for public revenue.</p>
           </div>
-          <div className="hero__stamp" aria-hidden="true"><span>Eight</span><strong>map layers</strong><small>one connected landscape</small></div>
+          <div className="hero__stamp" aria-hidden="true"><span>Ten</span><strong>map layers</strong><small>one connected landscape</small></div>
         </section>
 
         <section className="perspective-section" aria-labelledby="perspective-heading">
@@ -65,7 +66,7 @@ function App() {
           <article className="perspective-card">
             <div><span className="perspective-card__kicker">{perspectiveData.kicker}</span><h2>{perspectiveData.title}</h2></div>
             <p>{perspectiveData.body}</p>
-            <a href={perspectiveSource?.url} target="_blank" rel="noreferrer"><strong>{perspectiveData.stat}</strong><span>{perspectiveSource?.organization} ↗</span></a>
+            <a href={perspectiveSource.url} target="_blank" rel="noreferrer" title={perspectiveSource.title + ' — ' + perspectiveClaim.pageTable}><strong>{perspectiveData.stat}</strong><span>{perspectiveSource.organization} · {perspectiveClaim.pageTable} ↗</span></a>
           </article>
         </section>
 
@@ -95,7 +96,7 @@ function App() {
               </div>
               <details className="how-to" open>
                 <summary>How to read this map</summary>
-                <p>Markers are approximate anchors. Region borders orient the reader. Painted forest and farm areas are explanatory textures, not inventories.</p>
+                <p>Markers are approximate anchors. Region borders orient the reader. Painted forest and farm areas are explanatory textures, not inventories. River symbols open cards; blue lines show generalized centerlines.</p>
                 <p>The ✦ identifies layers emphasized by the current perspective.</p>
               </details>
             </aside>
@@ -125,9 +126,9 @@ function App() {
         <section className="method-section" id="method" aria-labelledby="method-heading">
           <div className="method-intro"><span className="chapter">Chapter 02</span><h2 id="method-heading">Built for context, not certainty theater.</h2><p>{mapDataNote}</p></div>
           <div className="method-cards">
-            <article><span>01</span><h3>Known</h3><p>Labels follow public reports from USGS, EITI, the World Bank, WITS, FAO, and Natural Earth.</p></article>
+            <article><span>01</span><h3>Known</h3><p>Every quantitative or location claim is stored with its period, evidence type, limitation, page or table, and direct source.</p></article>
             <article><span>02</span><h3>Approximate</h3><p>Markers identify a field, district, town area, or state-scale concentration—never an invented precise mine coordinate.</p></article>
-            <article><span>03</span><h3>Historical</h3><p>EITI’s detailed project locations describe FY 2017–2018. They are not evidence of current operation or territorial control.</p></article>
+            <article><span>03</span><h3>Historical</h3><p>EITI’s detailed project locations describe FY 2017–2018. Myanmar was delisted in 2024; the old report is not evidence of current operation or control. <a href={sourceById['eiti-country'].url} target="_blank" rel="noreferrer">EITI status ↗</a></p></article>
             <article><span>04</span><h3>Human</h3><p>Conflict, unsafe work, displacement, and environmental damage are material impacts, not game mechanics or rewards.</p></article>
           </div>
         </section>
